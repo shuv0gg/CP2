@@ -1,0 +1,68 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+const int MAX = 100;
+int graph[MAX][MAX]; // Adjacency matrix
+bool visited[MAX];
+int parent[MAX];
+
+void bfs(int start, int end, int V) {
+    queue<int> q;
+    visited[start] = true;
+    q.push(start);
+    parent[start] = -1;
+
+    while (!q.empty()) {
+        int node = q.front();
+        q.pop();
+
+        for (int i = 0; i < V; i++) {
+            if (graph[node][i] && !visited[i]) {
+                visited[i] = true;
+                parent[i] = node;
+                q.push(i);
+                if (i == end) break;
+            }
+        }
+    }
+
+    // Print shortest path
+    int path[MAX], idx = 0;
+    for (int at = end; at != -1; at = parent[at])
+        path[idx++] = at;
+
+    cout << "Shortest Path: ";
+    for (int i = idx - 1; i >= 0; i--)
+        cout << path[i] << " ";
+    cout << endl;
+}
+
+int main() {
+    int V, E;
+    cout << "Enter number of vertices: ";
+    cin >> V;
+    cout << "Enter number of edges: ";
+    cin >> E;
+
+    // Initialize graph
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++)
+            graph[i][j] = 0;
+
+    cout << "Enter edges (u v) for undirected graph:\n";
+    for (int i = 0; i < E; i++) {
+        int u, v;
+        cin >> u >> v;
+        graph[u][v] = 1;
+        graph[v][u] = 1;
+    }
+
+    int start, end;
+    cout << "Enter start and end node: ";
+    cin >> start >> end;
+
+    bfs(start, end, V);
+
+    return 0;
+}
